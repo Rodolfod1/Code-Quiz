@@ -28,21 +28,19 @@
       </nav>
 <!-- using a container for my questions and instructions  -->
   <div class="container">
-        <div id="instructions-container"class="card hide">
+        <div id="instructions-container"class="card col-sm hide">
             <H4>Javascript Basic Concepts Quiz:</H4>
             <p> This is a speed test on your basic knowledge of Javascript.</p><p>You will have 1 minute to answer 4 questions.</p><p>Each question is 25 points. Click the "Take the Quiz" button to begin.</p>
         </div>
-      <div id="question-container" class="card hide">
+      <div id="question-container" class="card col-sm hide">
           <div> <h3 id="myQuestion">Question</h3>
            <br>
           <ol id="answerList"></ol>
           </div>
       </div>
       <div id="status-container" class="window">
-        <h6 id="reStatus"></h6>
-        <br>
-        <br>
-        <H4 id="countdown"></H4>
+        <h6 id="reStatus" class="badge badge-pill badge-light"></h6>
+        <H6 id="countdown" class="badge badge-pill badge-warning"></H6>
       </div>
   </div>
      

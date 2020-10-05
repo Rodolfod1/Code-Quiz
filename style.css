@@ -39,8 +39,9 @@ a{
 .window {
     margin-top: 10px;
     display: flex;
-    /* justify-content: center; */
+    justify-content: center;
     align-items: center;
+    gap: 20px;
 }
 
   /* Footer */
