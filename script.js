@@ -15,6 +15,7 @@ var theAnswer
 var myAns
 var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
 var Score=0
+var timeInterval
 // my functions //
 //
 
@@ -23,7 +24,7 @@ var Score=0
         // if the start button is pressed then unHide the question frame
         // call for the box to be populated  
 function startPlaying () { instElement.classList.add("hide") 
-                            qContElement.classList.remove("hide")
+                           qContElement.classList.remove("hide")
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
                             myTimer()
@@ -80,8 +81,10 @@ function selectAnswer(x) {
 
 
 function gradeNSto(){  instElement.classList.add("hide") 
-qContElement.classList.add("hide") 
-    alert("your score is "+Score)
+                        qContElement.classList.add("hide")
+                        timerEl.classList.add("hide") 
+                        statusEl.classList.add("hide")  
+                        alert("your score is "+Score)
                         }
 
 //function to clear all original information from the card on the HTML so the new answers can be populated 
@@ -92,13 +95,16 @@ function clearOld() { while (lAnsElement.firstChild) {
                     }
  
 function myTimer() {
-                        var timeInterval = setInterval(function() {
-                        timerEl.textContent = timeLeft + " seconds remaining";
-                        timeLeft--;
+                      timeInterval = setInterval(function() {
+                        timerEl.textContent = timeLeft + " seconds remaining"
+                        timeLeft--
                             if (timeLeft === 0) {
-                            timerEl.textContent = "";
+                            timerEl.classList.remove("badge-warning")    
+                            timerEl.classList.add("badge-danger")    
+                            timerEl.textContent = "Time's Up!"
+                            clearInterval(timeInterval)
                             gradeNSto()
-                            clearInterval(timeInterval);
+                            
                         }
                     
                         }, 1000);
@@ -116,6 +122,7 @@ function nextQ() {  currentIndex++
                                                                              selectQuestion()
                                                                         } 
                                                                         else { 
+                                                                            clearInterval(timeInterval) // stop the clock and call the function to report results
                                                                                 gradeNSto()
                                                                          }
                         }
@@ -129,11 +136,11 @@ startBtn.addEventListener("click",startPlaying);
 
 // questions and answers arrays
 var questions=[
-                { question: "Choose the correct syntax for the external script ''register.js''",
+                { question: "Select the correct syntax for the external register.js",
                     answers: [
                                 {text:" <script type='text/javascript'' name=''register.js''></script>", correct: false},
                                 {text:" <script type='text/javascript'' href=''register.js''></script>", correct: false},
-                                {text:"<script type=''text/javascript'' src=''register.js''></script>   ", correct: true},
+                                {text:"<script type=''text/javascript'' src=''register.js''></script>", correct: true},
                                 {text:"<link type=''text/javascript'' href=''register.js''></link>", correct: false},
                             ]                            
                 },

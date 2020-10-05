@@ -20,12 +20,19 @@ background-color: #A69286;
 border-radius: 3%;
 box-shadow:0 0 10px 2px ;
 }
-ol {
-display: grid;
-grid-template-columns: repeat(2,auto);
-gap: 40px;
-    /* column-count: 2; will be another method to create the columns */
+
+/*  if the screen is not mobile then the list is displayed on a grid  */
+@media screen and (min-width:700px) {
+    ol {
+        display: grid;
+        grid-template-columns: repeat(2,auto);
+        gap: 40px;
+            /* column-count: 2; will be another method to create the columns */
+        }
 }
+
+
+
 
 .hide {
 display: none;
