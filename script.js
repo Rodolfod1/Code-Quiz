@@ -6,15 +6,37 @@ var lAnsElement=document.querySelector("#answerList");
 var startBtn=document.querySelector("#StartBtn");
 var qContElement=document.querySelector("#question-container");
 var instElement=document.querySelector("#instructions-container");
+var timerEl=document.querySelector("#countdown");
+var statusEl=document.querySelector("#reStatus");
 
 // variables for the functions like questions and answers moved to the bottom of the script 
 var shuffleQuestion, currentIndex
 var theAnswer
 var myAns
+var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
+var Score=0
 // my functions //
 //
+myTimer()
 
-        // if the start button is pressed then unhide the question frame
+function myTimer() {
+    
+  
+    var timeInterval = setInterval(function() {
+      timerEl.textContent = timeLeft + " seconds remaining";
+      timeLeft--;
+  
+      if (timeLeft === 0) {
+        timerEl.textContent = "";
+        gradeNSto()
+        clearInterval(timeInterval);
+      }
+  
+    }, 1000);
+  }
+  
+
+        // if the start button is pressed then unHide the question frame
         // call for the box to be populated  
 function startPlaying () { instElement.classList.add("hide") 
                             qContElement.classList.remove("hide")
@@ -28,11 +50,6 @@ function instructions () {
     qContElement.classList.add ("hide")
     instElement.classList.remove("hide")
                            
-                        }
-
-function myTimer () {
-
-
                         }
 
 function selectQuestion() {     clearOld()
@@ -62,13 +79,23 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
 function selectAnswer(x) {
     theAnswer=x.target
     var anStatus=theAnswer.dataset.correct
+    if (anStatus===true){
+        statusEl.textContent = "Wright Answer !";
+        Score=Score+25
+    }
+    else {
+        statusEl.textContent = "Wrong ... !";
+        timeLeft=timeLeft-10
+    }
     nextQ()
        
 }
 
 
 
-function gradeNSto(){   alert("store")
+function gradeNSto(){  instElement.classList.add("hide") 
+qContElement.classList.add("hide") 
+    alert("your score is "+Score)
                         }
 
 //function to clear all original information from the card on the HTML so the new answers can be populated 
@@ -103,7 +130,7 @@ startBtn.addEventListener("click",startPlaying);
 
 // questions and answers arrays
 var questions=[
-                { question: "What is the correct syntax for using an external script file called ''register.j''? ",
+                { question: "Choose the correct syntax for the external script ''register.js''",
                     answers: [
                                 {text:" <script type='text/javascript'' name=''register.js''></script>", correct: false},
                                 {text:" <script type='text/javascript'' href=''register.js''></script>", correct: false},
