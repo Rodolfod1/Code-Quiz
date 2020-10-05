@@ -17,24 +17,8 @@ var timeLeft = 120 // declaring this variable as global to deduct time if the an
 var Score=0
 // my functions //
 //
-myTimer()
 
-function myTimer() {
-    
-  
-    var timeInterval = setInterval(function() {
-      timerEl.textContent = timeLeft + " seconds remaining";
-      timeLeft--;
-  
-      if (timeLeft === 0) {
-        timerEl.textContent = "";
-        gradeNSto()
-        clearInterval(timeInterval);
-      }
-  
-    }, 1000);
-  }
-  
+
 
         // if the start button is pressed then unHide the question frame
         // call for the box to be populated  
@@ -42,6 +26,7 @@ function startPlaying () { instElement.classList.add("hide")
                             qContElement.classList.remove("hide")
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
+                            myTimer()
                             selectQuestion()
 
                         }                   
@@ -79,8 +64,9 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
 function selectAnswer(x) {
     theAnswer=x.target
     var anStatus=theAnswer.dataset.correct
-    if (anStatus===true){
-        statusEl.textContent = "Wright Answer !";
+    console.log(anStatus)
+    if (anStatus){
+        statusEl.textContent = "Correct Answer !";
         Score=Score+25
     }
     else {
@@ -105,6 +91,19 @@ function clearOld() { while (lAnsElement.firstChild) {
                                                      }
                     }
  
+function myTimer() {
+                        var timeInterval = setInterval(function() {
+                        timerEl.textContent = timeLeft + " seconds remaining";
+                        timeLeft--;
+                            if (timeLeft === 0) {
+                            timerEl.textContent = "";
+                            gradeNSto()
+                            clearInterval(timeInterval);
+                        }
+                    
+                        }, 1000);
+                    }
+  
  
  
  
