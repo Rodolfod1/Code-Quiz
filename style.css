@@ -1,0 +1,50 @@
+*,*::before,*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #D9C9BA;
+}
+
+nav {
+    background-color: #BF3604;
+}
+.container {
+    height: 100vh;
+}
+
+.card {
+margin-top: 20%;
+align-items: center;
+background-color: #A69286;
+border-radius: 3%;
+box-shadow:0 0 10px 2px ;
+}
+ol {
+display: grid;
+grid-template-columns: repeat(2,auto);
+gap: 40px;
+    /* column-count: 2; will be another method to create the columns */
+}
+
+.hide {
+display: none;
+
+}
+
+a{
+    color: black;
+    text-decoration: none;
+}
+
+
+  /* Footer */
+/* containing position sticky */
+footer {
+    text-align: center;
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 20px;
+}
