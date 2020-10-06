@@ -21,11 +21,14 @@ var myAns
 var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
 var Score=0
 var timeInterval
+var highScores=[]
 // my functions //
  // if the start button is pressed then unHide the question frame
         // call for the box to be populated  
-function startPlaying () { instElement.classList.add("hide") 
+function startPlaying () {   
+                            instElement.classList.add("hide") 
                            qContElement.classList.remove("hide")
+                          
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
                             myTimer()
@@ -125,13 +128,38 @@ function nextQ() {  currentIndex++
                                                                             clearInterval(timeInterval) // stop the clock and call the function to report results
                                                                                 gradeNSto()
                                                                          }
-                        }
+                                                                        }
+
+function writeMem() {
+    var initials=userEl.value
+    var totalScore=localStorage.getItem("Totals")
+    highScores={name: initials, score: Score}
+
+    // if there localStorage is empty then log the array higScores
+    if (totalScore===null){
+                            localStorage.setItem("Totals",JSON.stringify([highScores]))
+                            console.log(totalScore)}
+
+                            //if there is existing data on the localStorage then we are adding to the array 
+                            
+            else {
+                           var topScores=JSON.parse(totalScore)
+                            topScores.push(highScores)
+                            localStorage.setItem("Totals",JSON.stringify([highScores]))
+                }
+
+    console.log(localStorage)
+    scoreDiv.classList.add("hide")
+    /// end of script
+}
+
 /// My events 
 
 //1.- event to display instructions
 insBtn.addEventListener("click",instructions);
 startBtn.addEventListener("click",startPlaying);
 //2.- this event listener will include a function to store at the local memory the high scores 
+addUser.addEventListener("click",writeMem)
 
 
 
