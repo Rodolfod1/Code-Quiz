@@ -1,5 +1,19 @@
-// list of variables for queryselector 
 
+//                Code Quiz - Script by Rodolfo Diaz
+//
+//                          Table of contents:
+//              0.- All querySelectors and Global variables.  
+//              1.- When the Page loads. 
+//              2.- Events.  
+//              3.- Functions within the quiz flow.   
+//              4.- How this script ends   
+//              5.- Support functions                 
+//                      5.1.- Clear previews values dynamically   
+//                      5.2.- Memory management with localStorage and JSON  
+//              6.- All querySelectors and Global variables  
+//
+
+// 0.- list of variables for queryselector 
 var insBtn=document.querySelector("#ins-btn");
 var qNameElement=document.querySelector("#myQuestion");
 var lAnsElement=document.querySelector("#answerList");
@@ -12,41 +26,68 @@ var scoreEl=document.querySelector("#myScore");
 var scoreDiv=document.querySelector("#score-container");
 var userEl=document.querySelector("#userName");
 var addUser=document.querySelector("#addName");
-
-
 // variables for the functions like questions and answers moved to the bottom of the script 
-var shuffleQuestion, currentIndex
-var theAnswer
-var myAns
+var shuffleQuestion, currentIndex,theAnswer,myAns,timeInterval 
 var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
 var Score=0
-var timeInterval
-var highScores=[]
-// my functions //
- // if the start button is pressed then unHide the question frame
+var highScores,leadBoard=[]
+
+//   **********************  My Magic starts HERE!! ******************************
+
+/// 1.- when the page loads then we clear existing localStorage 
+localStorage.clear() 
+
+///                          2. My events 
+
+//2.1- event to display instructions
+insBtn.addEventListener("click",instructions)
+//2.2.- To start the quiz
+startBtn.addEventListener("click",startPlaying)
+
+//  3.                          my functions
+
+// 3.1 if the start button is pressed then unHide the question frame
         // call for the box to be populated  
 function startPlaying () {   
                             instElement.classList.add("hide") 
                            qContElement.classList.remove("hide")
-                          
+                          // this method is to shuffle the questions so they don't have the same order every time the quiz starts 
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
                             myTimer()
                             selectQuestion()
-
-                        }                   
-
+                        }  
+// 3.2 If the instructions are selected we hide the questions and display the instructions
 function instructions () {
-    qContElement.classList.add ("hide")
-    instElement.classList.remove("hide")
+                        qContElement.classList.add ("hide")
+                        instElement.classList.remove("hide")
                            
                         }
-
+// 3.3.- from 3.1 if the start quiz button is pressed we start our timer --- timer format debugged during bootCamp class activity 
+function myTimer() {
+                            timeInterval = setInterval(function() {
+                              timerEl.textContent = timeLeft + " seconds remaining"
+                              timeLeft--
+                                  if (timeLeft === 0) {
+                                  timerEl.classList.remove("badge-warning")    
+                                  timerEl.classList.add("badge-danger")    
+                                  timerEl.textContent = "Time's Up!"
+                                  clearInterval(timeInterval)
+                                  gradeNSto()
+                                  
+                              }
+                          
+                              }, 1000);
+                          }
+// 3.4 .- From 3.1 this function will kickoff our question display,, 
+/// clear the template and then call the displayQuestion function 
 function selectQuestion() {     clearOld()
                                 dispQuestion(shuffleQuestion[currentIndex])
                                 
                             }
-
+//3.5 .- this function is to display the questions and possible answers contained on the array 
+// with the current index question, display the name on a card tittle   and create a list with anchors for each of the answers
+// appendChild the anchor to the list item and then appendChild the list item to the ordered list 
 function dispQuestion(question) {   qNameElement.textContent=question.question
                                     question.answers.forEach(answer => {
                                                                         var answerItem=document.createElement("li")
@@ -55,9 +96,7 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
                                                                         myAns.setAttribute('href',"#")
                                                                         myAns.textContent=answer.text
                                                                         answerItem.appendChild(myAns)
-                                                                        // place holder space to insert a class
-                                                                        
-                                                                        // Check if the answer is correct 
+                                                                        // Check if the correct property is true, if so, then assign it to the answer  
                                                                         if(answer.correct){
                                                                                             myAns.dataset.correct=answer.correct
                                                                                             }
@@ -66,25 +105,35 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
                                                                         lAnsElement.appendChild(answerItem)
                                                                      })  
                                 }
-// get the answer and compare if this is correct, or wrong , then execute action accordingly                                 
+// 3.6.- Get the answer and compare if this is correct, or wrong , then execute action accordingly                                 
 function selectAnswer(x) {
-    theAnswer=x.target
-    var anStatus=theAnswer.dataset.correct
-    console.log(anStatus)
-    if (anStatus){
-        statusEl.textContent = "Correct Answer !";
-        Score=timeLeft
-    }
-    else {
-        statusEl.textContent = "Wrong ... !";
-        timeLeft=timeLeft-10
-    }
-    nextQ()
+                            theAnswer=x.target
+                            var anStatus=theAnswer.dataset.correct
+                            console.log(anStatus)
+                            if (anStatus){
+                                statusEl.textContent = "Correct Answer !";
+                                Score=timeLeft
+                                        }
+                                        else {
+                                            statusEl.textContent = "Wrong ... !";
+                                            timeLeft=timeLeft-10
+                                        }
+                                        nextQ()
        
-}
-
-
-
+                        }
+// 3.7  Check if we have more questions, 
+ // if current index.length < current index +1 then look for next question , else game over 
+ function nextQ() {  currentIndex++                     
+    if (shuffleQuestion.length > currentIndex) {
+                                                     selectQuestion()
+                                                } 
+                                                else { 
+                                                    clearInterval(timeInterval) // stop the clock and call the function to report results
+                                                        gradeNSto()
+                                                 }
+                                                }
+// 3.8 when the game is over, 
+// hide the current elements and then present the form for the score and name 
 function gradeNSto(){  instElement.classList.add("hide") 
                         qContElement.classList.add("hide")
                         timerEl.classList.add("hide") 
@@ -94,6 +143,11 @@ function gradeNSto(){  instElement.classList.add("hide")
                         
                         }
 
+//                                                  4.   End of Script 
+// add an event listener for the submit score button and call to write the results on the memory  
+addUser.addEventListener("click",writeMem)
+
+//   =================   5.-  Support Functions ==========================
 
 //function to clear all original information from the card on the HTML so the new answers can be populated 
 function clearOld() { while (lAnsElement.firstChild) {
@@ -102,70 +156,43 @@ function clearOld() { while (lAnsElement.firstChild) {
                                                      }
                     }
  
-function myTimer() {
-                      timeInterval = setInterval(function() {
-                        timerEl.textContent = timeLeft + " seconds remaining"
-                        timeLeft--
-                            if (timeLeft === 0) {
-                            timerEl.classList.remove("badge-warning")    
-                            timerEl.classList.add("badge-danger")    
-                            timerEl.textContent = "Time's Up!"
-                            clearInterval(timeInterval)
-                            gradeNSto()
-                            
-                        }
-                    
-                        }, 1000);
+// this function writes into the localStorage using JSON -- i tried to pseudocode inside the function since it's complex  
+function writeMem(event) {
+                                                event.preventDefault()
+                                                //taking the initials from the input form     
+                                                var initials=userEl.value
+                        
+                        //preparing my user object for JSON 
+                        highScores={name: initials, score: Score}
+                        //checking if the localStorage is empty 
+                        var totalScore=localStorage.getItem("Totals")
+                        // if there localStorage is empty then log the array higScores
+                        if (totalScore===null){
+                                                console.log("fue nulo");
+                                                localStorage.setItem("Totals",JSON.stringify([highScores]))
+                                                }
+                                            
+                                                //if there is existing data on the localStorage then set new submission 
+                                                
+                                else {          console.log("ya habia algo ");
+                                                leadBoard=JSON.parse(totalScore)
+                                                console.log("arreglo"+leadBoard);
+                                                console.log("lo nuevo"+highScores);
+                                                /// adding the new score to the leadBoard
+                                                leadBoard.push(highScores)
+
+                                                console.log("el nuevo"+leadBoard);
+                                            //    set the new values on the local storage 
+                                            localStorage.setItem("Totals",JSON.stringify(leadBoard))
+                                            console.log(localStorage);
+                                        
+                                    }
+                                       
+                        scoreDiv.classList.add("hide")
+                       // end of script 
                     }
-    // Check if we have more questions, 
 
- // if current index.length < current index +1 then look for next question , else game over 
-function nextQ() {  currentIndex++                     
-                            if (shuffleQuestion.length > currentIndex) {
-                                                                             selectQuestion()
-                                                                        } 
-                                                                        else { 
-                                                                            clearInterval(timeInterval) // stop the clock and call the function to report results
-                                                                                gradeNSto()
-                                                                         }
-                                                                        }
-
-function writeMem() {
-    var initials=userEl.value
-    var totalScore=localStorage.getItem("Totals")
-    highScores={name: initials, score: Score}
-
-    // if there localStorage is empty then log the array higScores
-    if (totalScore===null){
-                            localStorage.setItem("Totals",JSON.stringify([highScores]))
-                            console.log(totalScore)}
-
-                            //if there is existing data on the localStorage then we are adding to the array 
-                            
-            else {
-                           var topScores=JSON.parse(totalScore)
-                            topScores.push(highScores)
-                            localStorage.setItem("Totals",JSON.stringify([highScores]))
-                }
-
-    console.log(localStorage)
-    scoreDiv.classList.add("hide")
-    /// end of script
-}
-
-/// My events 
-
-//1.- event to display instructions
-insBtn.addEventListener("click",instructions);
-startBtn.addEventListener("click",startPlaying);
-//2.- this event listener will include a function to store at the local memory the high scores 
-addUser.addEventListener("click",writeMem)
-
-
-
-
-
-// questions and answers arrays
+//    =========  6.-  Array for Questions and Answers  ==========================
 var questions=[
                 { question: "Select the correct syntax for the external register.js",
                     answers: [
