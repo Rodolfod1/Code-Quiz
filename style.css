@@ -30,9 +30,9 @@ box-shadow:0 0 10px 2px ;
             /* column-count: 2; will be another method to create the columns */
         }
 }
-
-
-
+ ol{
+     gap: 60px;
+ }
 
 .hide {
 display: none;

@@ -68,7 +68,7 @@ function selectAnswer(x) {
     console.log(anStatus)
     if (anStatus){
         statusEl.textContent = "Correct Answer !";
-        Score=Score+25
+        Score=timeLeft
     }
     else {
         statusEl.textContent = "Wrong ... !";
