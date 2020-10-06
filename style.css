@@ -41,8 +41,13 @@ display: none;
 
 a{
     color: black;
+    
+}
+
+.anchor{
     text-decoration: none;
 }
+
 .window {
     margin-top: 10px;
     display: flex;

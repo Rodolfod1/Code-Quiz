@@ -8,6 +8,11 @@ var qContElement=document.querySelector("#question-container");
 var instElement=document.querySelector("#instructions-container");
 var timerEl=document.querySelector("#countdown");
 var statusEl=document.querySelector("#reStatus");
+var scoreEl=document.querySelector("#myScore");
+var scoreDiv=document.querySelector("#score-container");
+var userEl=document.querySelector("#userName");
+var addUser=document.querySelector("#addName");
+
 
 // variables for the functions like questions and answers moved to the bottom of the script 
 var shuffleQuestion, currentIndex
@@ -17,11 +22,7 @@ var timeLeft = 120 // declaring this variable as global to deduct time if the an
 var Score=0
 var timeInterval
 // my functions //
-//
-
-
-
-        // if the start button is pressed then unHide the question frame
+ // if the start button is pressed then unHide the question frame
         // call for the box to be populated  
 function startPlaying () { instElement.classList.add("hide") 
                            qContElement.classList.remove("hide")
@@ -47,6 +48,7 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
                                     question.answers.forEach(answer => {
                                                                         var answerItem=document.createElement("li")
                                                                         myAns=document.createElement("a")
+                                                                        myAns.classList.add("anchor")
                                                                         myAns.setAttribute('href',"#")
                                                                         myAns.textContent=answer.text
                                                                         answerItem.appendChild(myAns)
@@ -84,8 +86,11 @@ function gradeNSto(){  instElement.classList.add("hide")
                         qContElement.classList.add("hide")
                         timerEl.classList.add("hide") 
                         statusEl.classList.add("hide")  
-                        alert("your score is "+Score)
+                        scoreDiv.classList.remove("hide")
+                        scoreEl.textContent=Score
+                        
                         }
+
 
 //function to clear all original information from the card on the HTML so the new answers can be populated 
 function clearOld() { while (lAnsElement.firstChild) {
@@ -109,12 +114,7 @@ function myTimer() {
                     
                         }, 1000);
                     }
-  
- 
- 
- 
     // Check if we have more questions, 
-
 
  // if current index.length < current index +1 then look for next question , else game over 
 function nextQ() {  currentIndex++                     
@@ -131,6 +131,9 @@ function nextQ() {  currentIndex++
 //1.- event to display instructions
 insBtn.addEventListener("click",instructions);
 startBtn.addEventListener("click",startPlaying);
+//2.- this event listener will include a function to store at the local memory the high scores 
+
+
 
 
 
