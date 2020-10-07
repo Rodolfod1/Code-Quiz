@@ -14,18 +14,22 @@
 //
 
 // 0.- list of variables for queryselector 
-var insBtn=document.querySelector("#ins-btn");
-var qNameElement=document.querySelector("#myQuestion");
-var lAnsElement=document.querySelector("#answerList");
-var startBtn=document.querySelector("#StartBtn");
-var qContElement=document.querySelector("#question-container");
-var instElement=document.querySelector("#instructions-container");
-var timerEl=document.querySelector("#countdown");
-var statusEl=document.querySelector("#reStatus");
-var scoreEl=document.querySelector("#myScore");
-var scoreDiv=document.querySelector("#score-container");
-var userEl=document.querySelector("#userName");
-var addUser=document.querySelector("#addName");
+var insBtn=document.querySelector("#ins-btn")
+var qNameElement=document.querySelector("#myQuestion")
+var lAnsElement=document.querySelector("#answerList")
+var startBtn=document.querySelector("#StartBtn")
+var qContElement=document.querySelector("#question-container")
+var instElement=document.querySelector("#instructions-container")
+var timerEl=document.querySelector("#countdown")
+var statusEl=document.querySelector("#reStatus")
+var scoreEl=document.querySelector("#myScore")
+var scoreDiv=document.querySelector("#score-container")
+var userEl=document.querySelector("#userName")
+var addUser=document.querySelector("#addName")
+var boardEl=document.querySelector("#hiScore")
+var leBoard=document.querySelector("#board-container")
+var scoreList=document.querySelector("#theTopOnes")
+
 // variables for the functions like questions and answers moved to the bottom of the script 
 var shuffleQuestion, currentIndex,theAnswer,myAns,timeInterval 
 var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
@@ -34,8 +38,8 @@ var highScores,leadBoard=[]
 
 //   **********************  My Magic starts HERE!! ******************************
 
-/// 1.- when the page loads then we clear existing localStorage 
-localStorage.clear() 
+/// 1.- when the page loads then we clear existing localStorage --- this function will be disabled by default; if we want to e
+// localStorage.clear() 
 
 ///                          2. My events 
 
@@ -43,14 +47,18 @@ localStorage.clear()
 insBtn.addEventListener("click",instructions)
 //2.2.- To start the quiz
 startBtn.addEventListener("click",startPlaying)
+//2.3.- LeaderBoard 
+boardEl.addEventListener("click",leadersBoard)
 
 //  3.                          my functions
 
 // 3.1 if the start button is pressed then unHide the question frame
         // call for the box to be populated  
-function startPlaying () {   
+function startPlaying () {    leBoard.classList.add("hide")
                             instElement.classList.add("hide") 
                            qContElement.classList.remove("hide")
+                           timerEl.classList.remove("hide") 
+                           statusEl.classList.remove("hide") 
                           // this method is to shuffle the questions so they don't have the same order every time the quiz starts 
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
@@ -59,6 +67,7 @@ function startPlaying () {
                         }  
 // 3.2 If the instructions are selected we hide the questions and display the instructions
 function instructions () {
+                        leBoard.classList.add("hide")
                         qContElement.classList.add ("hide")
                         instElement.classList.remove("hide")
                            
@@ -90,7 +99,7 @@ function selectQuestion() {     clearOld()
 // appendChild the anchor to the list item and then appendChild the list item to the ordered list 
 function dispQuestion(question) {   qNameElement.textContent=question.question
                                     question.answers.forEach(answer => {
-                                                                        var answerItem=document.createElement("li")
+                                                                        answerItem=document.createElement("li")
                                                                         myAns=document.createElement("a")
                                                                         myAns.classList.add("anchor")
                                                                         myAns.setAttribute('href',"#")
@@ -108,8 +117,7 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
 // 3.6.- Get the answer and compare if this is correct, or wrong , then execute action accordingly                                 
 function selectAnswer(x) {
                             theAnswer=x.target
-                            var anStatus=theAnswer.dataset.correct
-                            console.log(anStatus)
+                            anStatus=theAnswer.dataset.correct
                             if (anStatus){
                                 statusEl.textContent = "Correct Answer !";
                                 Score=timeLeft
@@ -123,7 +131,8 @@ function selectAnswer(x) {
                         }
 // 3.7  Check if we have more questions, 
  // if current index.length < current index +1 then look for next question , else game over 
- function nextQ() {  currentIndex++                     
+ function nextQ() {  leBoard.classList.add("hide")
+     currentIndex++                     
     if (shuffleQuestion.length > currentIndex) {
                                                      selectQuestion()
                                                 } 
@@ -138,6 +147,7 @@ function gradeNSto(){  instElement.classList.add("hide")
                         qContElement.classList.add("hide")
                         timerEl.classList.add("hide") 
                         statusEl.classList.add("hide")  
+                        leBoard.classList.add("hide")
                         scoreDiv.classList.remove("hide")
                         scoreEl.textContent=Score
                         
@@ -148,6 +158,17 @@ function gradeNSto(){  instElement.classList.add("hide")
 addUser.addEventListener("click",writeMem)
 
 //   =================   5.-  Support Functions ==========================
+
+function leadersBoard() { totalScore=localStorage.getItem("Totals")
+                        leadBoard=JSON.parse(totalScore)
+                       
+                        if (leadBoard===null){
+                            alert("Welcome, you are the first player.    No historic scores found for this Quiz")
+                        }
+                        console.log(leadBoard)
+                        leBoard.classList.remove("hide")
+                        
+}
 
 //function to clear all original information from the card on the HTML so the new answers can be populated 
 function clearOld() { while (lAnsElement.firstChild) {
@@ -160,36 +181,24 @@ function clearOld() { while (lAnsElement.firstChild) {
 function writeMem(event) {
                                                 event.preventDefault()
                                                 //taking the initials from the input form     
-                                                var initials=userEl.value
+                                              initials=userEl.value
                         
-                        //preparing my user object for JSON 
-                        highScores={name: initials, score: Score}
-                        //checking if the localStorage is empty 
-                        var totalScore=localStorage.getItem("Totals")
-                        // if there localStorage is empty then log the array higScores
-                        if (totalScore===null){
-                                                console.log("fue nulo");
-                                                localStorage.setItem("Totals",JSON.stringify([highScores]))
-                                                }
-                                            
-                                                //if there is existing data on the localStorage then set new submission 
-                                                
-                                else {          console.log("ya habia algo ");
-                                                leadBoard=JSON.parse(totalScore)
-                                                console.log("arreglo"+leadBoard);
-                                                console.log("lo nuevo"+highScores);
-                                                /// adding the new score to the leadBoard
-                                                leadBoard.push(highScores)
-
-                                                console.log("el nuevo"+leadBoard);
-                                            //    set the new values on the local storage 
-                                            localStorage.setItem("Totals",JSON.stringify(leadBoard))
-                                            console.log(localStorage);
-                                        
-                                    }
-                                       
-                        scoreDiv.classList.add("hide")
-                       // end of script 
+                                //preparing my user object for JSON 
+                                highScores={name: initials, score: Score}
+                                //checking if the localStorage is empty 
+                                totalScore=localStorage.getItem("Totals")
+                                // if there localStorage is empty then log the array higScores
+                                if (totalScore===null) {localStorage.setItem("Totals",JSON.stringify([highScores]))}
+                                                    //if there is existing data on the localStorage then set new submission 
+                                else {                    leadBoard=JSON.parse(totalScore)
+                                                        /// adding the new score to the leadBoard
+                                                        leadBoard.push(highScores)
+                                                    //    set the new values on the local storage 
+                                                    localStorage.setItem("Totals",JSON.stringify(leadBoard))
+                                                    console.log(localStorage)                                       
+                                            }
+                                scoreDiv.classList.add("hide")
+                            // end of script 
                     }
 
 //    =========  6.-  Array for Questions and Answers  ==========================
