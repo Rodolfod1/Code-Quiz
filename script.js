@@ -135,7 +135,7 @@ function selectAnswer(x) {
                                         }
                                         else {
                                             statusEl.textContent = "Wrong ... !";
-                                            timeLeft=timeLeft-10
+                                            timeLeft=timeLeft-30
                                         }
                                         nextQ()
        
@@ -255,7 +255,7 @@ function writeMem(event) {
                             // end of script 
                     }
 
-//    =========  6.-  Array for Questions and Answers  ==========================
+//    =========  6.-  Object  for Questions and Answers  ==========================
 var questions=[
                 { question: "Select the correct syntax for the external register.js",
                     answers: [
