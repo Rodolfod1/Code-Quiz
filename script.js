@@ -165,7 +165,17 @@ function leadersBoard() { totalScore=localStorage.getItem("Totals")
                         if (leadBoard===null){
                             alert("Welcome, you are the first player.    No historic scores found for this Quiz")
                         }
-                        console.log(leadBoard)
+                        // we need to sort the array leadBoard by score highest to the lowest
+                        leadBoard.sort(function (a,b) {
+                            return b.score - a.score                    
+                        })
+                        // then we proceed to populate the table with the top three 
+                             for(i=0;i<3;i++){
+                                console.log(leadBoard[i].name)
+                             }
+                        
+                        
+
                         leBoard.classList.remove("hide")
                         
 }
