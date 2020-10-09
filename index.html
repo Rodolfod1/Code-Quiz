@@ -41,6 +41,7 @@
               <ol id="answerList"></ol>
              </div>
          </div>
+         <!-- Container to ask to submit the name and score  -->
       <div id="score-container"class="card col-sm hide">
           <H4>Your Score :</H4>
           <p id="myScore"></p>
@@ -49,59 +50,21 @@
       </div>
       <!--  tale inside a card container to display the leader board  -->
       <div id="board-container"class="card col-sm hide">
-          <H4>- Top Scores -</H4>
+          <H4>- Top 3 Board -</H4>
           <div class="card-body">
-            <!-- <ol id="theTopOnes"></ol> -->
-              <!--       -->
-
-          <table class="table">
+             <table class="table">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">name</th>
-                <th scope="col">score</th>
+                <th scope="col">Rank</th>
+                <th scope="col">Name</th>
+                <th scope="col">Score</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td scope="row">#place#</td>
-                <td>name</td>
-                <td>score</td>
-              </tr>
-
-              <tr>
-                <td scope="row">1</td>
-                <td>name</td>
-                <td>score</td>
-              </tr>
-
-
-              <tr>
-                <td scope="row">1</td>
-                <td>name</td>
-                <td>score</td>
-              </tr>
-
-
-              <tr>
-                <td scope="row">1</td>
-                <td>name</td>
-                <td>score</td>
-              </tr>
-
-              <tr>
-                <td scope="row">1</td>
-                <td>name</td>
-                <td>score</td>
-              </tr>
-
-
-
-
-              </tbody>
+            <tbody id="table"></tbody>
           </table>
            </div>
       </div>
+      <!-- badges for monitoring the answers and the timer  -->
     <div id="status-container" class="window">
         <h6 id="reStatus" class="badge badge-pill badge-light"></h6>
         <H6 id="countdown" class="badge badge-pill badge-warning"></H6>

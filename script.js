@@ -29,12 +29,14 @@ var addUser=document.querySelector("#addName")
 var boardEl=document.querySelector("#hiScore")
 var leBoard=document.querySelector("#board-container")
 var scoreList=document.querySelector("#theTopOnes")
+var leadTable=document.querySelector("#table")
 
 // variables for the functions like questions and answers moved to the bottom of the script 
 var shuffleQuestion, currentIndex,theAnswer,myAns,timeInterval 
-var timeLeft = 120 // declaring this variable as global to deduct time if the answer is wrong initialized to 120 seconds
+var timeLeft = 0 // declaring this variable as global to deduct time 
 var Score=0
 var highScores,leadBoard=[]
+var ScoreDsp=false
 
 //   **********************  My Magic starts HERE!! ******************************
 
@@ -54,11 +56,14 @@ boardEl.addEventListener("click",leadersBoard)
 
 // 3.1 if the start button is pressed then unHide the question frame
         // call for the box to be populated  
-function startPlaying () {    leBoard.classList.add("hide")
+function startPlaying () {   
+    timeLeft=120 // initialized to 120 seconds every time the user clicks start 
+    leBoard.classList.add("hide")
+    ScoreDsp=false
                             instElement.classList.add("hide") 
                            qContElement.classList.remove("hide")
                            timerEl.classList.remove("hide") 
-                           statusEl.classList.remove("hide") 
+                           statusEl.classList.add("hide") 
                           // this method is to shuffle the questions so they don't have the same order every time the quiz starts 
                             shuffleQuestion=questions.sort(()=>Math.random()-0.5)
                             currentIndex=0
@@ -68,8 +73,12 @@ function startPlaying () {    leBoard.classList.add("hide")
 // 3.2 If the instructions are selected we hide the questions and display the instructions
 function instructions () {
                         leBoard.classList.add("hide")
+                        ScoreDsp=false
+                        timerEl.classList.add("hide") 
+                        statusEl.classList.add("hide") 
                         qContElement.classList.add ("hide")
                         instElement.classList.remove("hide")
+                        scoreDiv.classList.add("hide")
                            
                         }
 // 3.3.- from 3.1 if the start quiz button is pressed we start our timer --- timer format debugged during bootCamp class activity 
@@ -81,6 +90,7 @@ function myTimer() {
                                   timerEl.classList.remove("badge-warning")    
                                   timerEl.classList.add("badge-danger")    
                                   timerEl.textContent = "Time's Up!"
+                                  Score=0
                                   clearInterval(timeInterval)
                                   gradeNSto()
                                   
@@ -115,7 +125,8 @@ function dispQuestion(question) {   qNameElement.textContent=question.question
                                                                      })  
                                 }
 // 3.6.- Get the answer and compare if this is correct, or wrong , then execute action accordingly                                 
-function selectAnswer(x) {
+function selectAnswer(x) { 
+    statusEl.classList.remove("hide") 
                             theAnswer=x.target
                             anStatus=theAnswer.dataset.correct
                             if (anStatus){
@@ -148,6 +159,7 @@ function gradeNSto(){  instElement.classList.add("hide")
                         timerEl.classList.add("hide") 
                         statusEl.classList.add("hide")  
                         leBoard.classList.add("hide")
+                        ScoreDsp=false
                         scoreDiv.classList.remove("hide")
                         scoreEl.textContent=Score
                         
@@ -159,24 +171,50 @@ addUser.addEventListener("click",writeMem)
 
 //   =================   5.-  Support Functions ==========================
 
-function leadersBoard() { totalScore=localStorage.getItem("Totals")
+function leadersBoard() {
+    //checking if the leaderBoard has been displayed  
+    if (!ScoreDsp){
+        //hiding elements
+        instElement.classList.add("hide") 
+        timerEl.classList.add("hide") 
+        qContElement.classList.add ("hide")
+        scoreDiv.classList.add("hide")
+        statusEl.classList.add("hide") 
+        // retrieving values from local storage and parsing it to leadboard 
+            totalScore=localStorage.getItem("Totals")
                         leadBoard=JSON.parse(totalScore)
                        
                         if (leadBoard===null){
                             alert("Welcome, you are the first player.    No historic scores found for this Quiz")
                         }
+                        else {
+                            // calling the clear existing info from the table 
+                         clearOldScore()
+
                         // we need to sort the array leadBoard by score highest to the lowest
                         leadBoard.sort(function (a,b) {
                             return b.score - a.score                    
                         })
                         // then we proceed to populate the table with the top three 
                              for(i=0;i<3;i++){
-                                console.log(leadBoard[i].name)
+                                 brace=document.createElement("tr")
+                                 position=document.createElement("td")
+                                 position.setAttribute('scope',"row")
+                                 position.textContent=i+1
+                                 brace.appendChild(position)
+                                 nom=document.createElement("td")
+                                 nom.textContent=leadBoard[i].name
+                                 brace.appendChild(nom)
+                                 points=document.createElement("td")
+                                 points.textContent=leadBoard[i].score
+                                 brace.appendChild(points)
+                                 leadTable.appendChild(brace)
+                                 leBoard.classList.remove("hide")
+                                 ScoreDsp=true 
                              }
+                            }
                         
-                        
-
-                        leBoard.classList.remove("hide")
+                        }
                         
 }
 
@@ -186,7 +224,13 @@ function clearOld() { while (lAnsElement.firstChild) {
                                                         (lAnsElement.firstChild)
                                                      }
                     }
- 
+function clearOldScore() { while (leadTable.firstChild) {
+                        leadTable.removeChild
+                        (leadTable.firstChild)
+                     }
+} 
+
+
 // this function writes into the localStorage using JSON -- i tried to pseudocode inside the function since it's complex  
 function writeMem(event) {
                                                 event.preventDefault()
