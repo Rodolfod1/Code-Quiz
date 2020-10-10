@@ -61,6 +61,7 @@ function startPlaying () {
     leBoard.classList.add("hide")
     ScoreDsp=false
                             instElement.classList.add("hide") 
+                            scoreDiv.classList.add("hide")
                            qContElement.classList.remove("hide")
                            timerEl.classList.remove("hide") 
                            statusEl.classList.add("hide") 
@@ -92,8 +93,7 @@ function myTimer() {
                                   timerEl.textContent = "Time's Up!"
                                   Score=0
                                   clearInterval(timeInterval)
-                                  gradeNSto()
-                                  
+                                  Tup=setTimeout(gradeNSto,1500) // wait 1.5 sec before calling in the next function so the alert can be displayed                                                                
                               }
                           
                               }, 1000);
@@ -155,7 +155,10 @@ function selectAnswer(x) {
 // 3.8 when the game is over, 
 // hide the current elements and then present the form for the score and name 
 function gradeNSto(){  instElement.classList.add("hide") 
+                        timerEl.textContent = ""
                         qContElement.classList.add("hide")
+                        timerEl.classList.add("badge-warning")    
+                        timerEl.classList.remove("badge-danger") 
                         timerEl.classList.add("hide") 
                         statusEl.classList.add("hide")  
                         leBoard.classList.add("hide")
